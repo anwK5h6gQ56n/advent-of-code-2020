@@ -1,9 +1,6 @@
 const fs = require('fs');
 fs.readFile(__dirname + '/input.txt', (_, data) => {
-  const numbers = data
-    .toString()
-    .split('\n')
-    .sort((a, b) => b - a);
+  const numbers = data.toString().split('\n');
   const goal = 2020;
   let found = 0,
     found2 = 0,
