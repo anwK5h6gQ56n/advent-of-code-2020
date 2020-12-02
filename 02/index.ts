@@ -8,10 +8,7 @@ export function part1(input: string): number {
 
 export function part2(input: string): number {
 	return extractPasswords(input).filter(
-		(x: PasswordContent | null) =>
-			!!x &&
-			((x.password[x.min - 1] === x.char && x.password[x.max - 1] !== x.char) ||
-				(x.password[x.min - 1] !== x.char && x.password[x.max - 1] === x.char)),
+		(x: PasswordContent | null) => !!x && +(x.password[x.min - 1] === x.char) ^ +(x.password[x.max - 1] === x.char),
 	).length;
 }
 
