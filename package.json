@@ -1,0 +1,32 @@
+{
+	"name": "advent-of-code-2020",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"d1p1": "tsc && advent run 1 1 - < ./01/input.txt",
+		"d1p2": "tsc && advent run 1 2 - < ./01/input.txt",
+		"d2p1": "tsc && advent run 2 1 - < ./02/input.txt",
+		"d2p2": "tsc && advent run 2 2 - < ./02/input.txt"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/anwK5h6gQ56n/advent-of-code-2020.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/anwK5h6gQ56n/advent-of-code-2020/issues"
+	},
+	"homepage": "https://github.com/anwK5h6gQ56n/advent-of-code-2020#readme",
+	"adventConfig": {
+		"year": "2020",
+		"nameTemplate": "{{num}}/index.js"
+	},
+	"dependencies": {
+		"advent-of-code": "^5.0.0"
+	},
+	"devDependencies": {
+		"typescript": "^4.1.2"
+	}
+}
