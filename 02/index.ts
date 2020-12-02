@@ -2,7 +2,7 @@ export function part1(input: string): number {
 	const passwords = extractPasswords(input);
 	return passwords.filter((x) => {
 		if (!x) return false;
-		const occurance = x.password.split('').filter((char) => char === x.char).length;
+		const occurance = x.password.split(x.char).length - 1;
 		return occurance >= x.min && occurance <= x.max;
 	}).length;
 }
