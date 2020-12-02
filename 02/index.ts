@@ -1,6 +1,5 @@
 export function part1(input: string): number {
-	const passwords = extractPasswords(input);
-	return passwords.filter((x) => {
+	return extractPasswords(input).filter((x) => {
 		if (!x) return false;
 		const occurance = x.password.split(x.char).length - 1;
 		return occurance >= x.min && occurance <= x.max;
@@ -8,14 +7,12 @@ export function part1(input: string): number {
 }
 
 export function part2(input: any): any {
-	const passwords = extractPasswords(input);
-	return passwords.filter((x) => {
-		return (
+	return extractPasswords(input).filter(
+		(x: PasswordContent | null) =>
 			!!x &&
 			((x.password[x.min - 1] === x.char && x.password[x.max - 1] !== x.char) ||
-				(x.password[x.min - 1] !== x.char && x.password[x.max - 1] === x.char))
-		);
-	}).length;
+				(x.password[x.min - 1] !== x.char && x.password[x.max - 1] === x.char)),
+	).length;
 }
 
 interface PasswordContent {
