@@ -1,12 +1,12 @@
 export function part1(input: string): number {
-	return extractPasswords(input).filter((x) => {
+	return extractPasswords(input).filter((x: PasswordContent | null) => {
 		if (!x) return false;
 		const occurance = x.password.split(x.char).length - 1;
 		return occurance >= x.min && occurance <= x.max;
 	}).length;
 }
 
-export function part2(input: any): any {
+export function part2(input: string): number {
 	return extractPasswords(input).filter(
 		(x: PasswordContent | null) =>
 			!!x &&
