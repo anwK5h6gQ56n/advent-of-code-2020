@@ -1,13 +1,13 @@
 export function part1(input: string) {
-	return processPassports(input.split('\n\n')).filter((x: Passport) => x.propertiesExist()).length;
+	return processPassports(input).filter((x: Passport) => x.propertiesExist()).length;
 }
 
 export function part2(input: string) {
-	return processPassports(input.split('\n\n')).filter((x: Passport) => x.isValid()).length;
+	return processPassports(input).filter((x: Passport) => x.isValid()).length;
 }
 
-function processPassports(input: string[]): Passport[] {
-	return input.map((x: string) => {
+function processPassports(input: string): Passport[] {
+	return input.split('\n\n').map((x: string) => {
 		const passport = new Passport();
 		x.split(/\n| /g).map((property: string) => {
 			const keyValue: string[] = property.split(':');
