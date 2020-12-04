@@ -49,7 +49,7 @@ class Passport {
 			+this.eyr >= 2020 &&
 			+this.eyr <= 2030 &&
 			this.hcl.match(/^#([a-f0-9]{6})$/) &&
-			['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].some((x) => x === this.ecl) &&
+			['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].includes(this.ecl) &&
 			this.pid.match(/^\d{9}$/) &&
 			this.hgt.match(/^\d{2,3}(in|cm)$/) &&
 			((hgt[1] === 'in' && +hgt[0] >= 59 && +hgt[0] <= 76) || (hgt[1] === 'cm' && +hgt[0] >= 150 && +hgt[0] <= 193))
