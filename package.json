@@ -9,7 +9,9 @@
 		"d2p1": "tsc && advent run 2 1 - < ./02/input.txt",
 		"d2p2": "tsc && advent run 2 2 - < ./02/input.txt",
 		"d3p1": "tsc && advent run 3 1 - < ./03/input.txt",
-		"d3p2": "tsc && advent run 3 2 - < ./03/input.txt"
+		"d3p2": "tsc && advent run 3 2 - < ./03/input.txt",
+		"d4p1": "tsc && advent run 4 1 - < ./04/input.txt",
+		"d4p2": "tsc && advent run 4 2 - < ./04/input.txt"
 	},
 	"repository": {
 		"type": "git",

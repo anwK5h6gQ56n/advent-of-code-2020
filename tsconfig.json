@@ -6,5 +6,5 @@
 		"esModuleInterop": true,
 		"sourceMap": true
 	},
-	"files": ["01/index.ts", "02/index.ts", "03/index.ts"]
+	"files": ["01/index.ts", "02/index.ts", "03/index.ts", "04/index.ts"]
 }
