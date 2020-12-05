@@ -1,5 +1,5 @@
 export function part1(input: string): number {
-	return processSeats(input).sort((a: number, b: number): number => b - a)[0];
+	return Math.max(...processSeats(input));
 }
 
 export function part2(input: string): number {
