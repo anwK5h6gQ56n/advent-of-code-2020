@@ -17,5 +17,5 @@ export function part2(input: string): number {
 }
 
 function processGroups(input: string): string[][][] {
-	return input.split('\n\n').map((block) => block.split('\n').map((person) => person.split('')));
+	return input.split('\n\n').map((group) => group.split('\n').map((person) => person.split('')));
 }
