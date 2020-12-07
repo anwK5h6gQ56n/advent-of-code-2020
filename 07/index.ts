@@ -2,11 +2,18 @@ const TARGET = 'shiny gold';
 
 export function part1(input: string): number {
 	const rules = processRules(input);
-	return Object.keys(rules).filter((colour) => containsBag(rules, colour, TARGET)).length;
+	const containsBag = (colour: string): boolean =>
+		Object.keys(rules[colour]).some((bag: string) => bag === TARGET || containsBag(bag));
+	return Object.keys(rules).filter((colour) => containsBag(colour)).length;
 }
 
 export function part2(input: string): number {
-	return countBags(processRules(input), TARGET);
+	const rules = processRules(input);
+	const countBags = (color: string): number => {
+		const rule = rules[color];
+		return Object.keys(rule).reduce((a: number, b: string) => (rule[b] ? a + rule[b] + rule[b] * countBags(b) : a), 0);
+	};
+	return countBags(TARGET);
 }
 
 interface Rules {
@@ -22,17 +29,4 @@ function processRules(data: string): Rules {
 		}, {});
 		return rules;
 	}, {});
-}
-
-function containsBag(rules: Rules, colour: string, target: string): boolean {
-	const rule = rules[colour];
-	return Object.keys(rule).some((bag: string) => bag === target || containsBag(rules, bag, target));
-}
-
-function countBags(rules: Rules, colour: string): number {
-	const rule = rules[colour];
-	return Object.keys(rule).reduce(
-		(a: number, b: string) => (rule[b] ? a + rule[b] + rule[b] * countBags(rules, b) : a),
-		0,
-	);
 }
