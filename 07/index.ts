@@ -14,13 +14,13 @@ interface Rules {
 }
 
 function processRules(data: string): Rules {
-	return [...data.matchAll(/((^\w+\b.*) bags contain (.*)\.)/gm)].reduce((a: Rules, b: Array<string>) => {
-		(a as any)[b[2]] = b[3].split(', ').reduce((c: { [key: string]: number }, d: string) => {
-			const types: Array<string> = [...d.matchAll(/((\d+) (.*) bags?)/g)][0];
-			if (types && types[3]) (c as any)[types[3]] = +types[2];
-			return c;
+	return [...data.matchAll(/((^\w+\b.*) bags contain (.*)\.)/gm)].reduce((rules: Rules, x: Array<string>) => {
+		rules[x[2]] = x[3].split(', ').reduce((bags: { [key: string]: number }, y: string) => {
+			const types: Array<string> = [...y.matchAll(/((\d+) (.*) bags?)/g)][0];
+			if (types && types[3]) bags[types[3]] = +types[2];
+			return bags;
 		}, {});
-		return a;
+		return rules;
 	}, {});
 }
 
