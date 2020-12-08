@@ -1,5 +1,5 @@
 export function part1(input: string): number {
-	return execute(processInstructions(input)).result;
+	return execute(processInstructions(input)).accumulator;
 }
 
 export function part2(input: string): number | undefined {
@@ -20,7 +20,7 @@ export function part2(input: string): number | undefined {
 				return current.operation;
 			},
 		);
-		if (run.completed) return run.result;
+		if (run.completed) return run.accumulator;
 	}
 }
 
@@ -37,10 +37,10 @@ interface Instruction {
 
 function processInstructions(data: string): Instruction[] {
 	return data.split('\n').map((x: string) => {
-		const match = [...x.matchAll(/^(\w+) ([+-]\d+)$/g)][0];
+		const instruction = [...x.matchAll(/^(\w+) ([+-]\d+)$/g)][0];
 		return {
-			operation: match[1] as Operation,
-			value: +match[2],
+			operation: instruction[1] as Operation,
+			value: +instruction[2],
 		};
 	});
 }
@@ -48,16 +48,15 @@ function processInstructions(data: string): Instruction[] {
 function execute(
 	instructions: Instruction[],
 	changeOperation?: (instruction: Instruction) => Operation,
-): { result: number; completed: boolean } {
+): { accumulator: number; completed: boolean } {
 	let accumulator: number = 0;
 	let index: number = 0;
-	let previous: Instruction[] = [];
-
+	const previous: Instruction[] = [];
 	while (true) {
 		const current: Instruction = instructions[index];
 		if (previous.includes(current)) break;
 		previous.push(current);
-		let operation = changeOperation ? changeOperation(current) : current.operation;
+		const operation = changeOperation ? changeOperation(current) : current.operation;
 		switch (operation) {
 			case Operation.Accumulate:
 				accumulator += current.value;
@@ -68,7 +67,7 @@ function execute(
 				index += current.value;
 				break;
 		}
-		if (index === instructions.length) return { result: accumulator, completed: true };
+		if (index === instructions.length) return { accumulator, completed: true };
 	}
-	return { result: accumulator, completed: false };
+	return { accumulator, completed: false };
 }
