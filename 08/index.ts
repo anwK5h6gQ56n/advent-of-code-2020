@@ -47,21 +47,19 @@ function execute(
 	let accumulator: number = 0;
 	let index: number = 0;
 	const previous: Instruction[] = [];
-	while (true) {
-		const current: Instruction = instructions[index];
-		if (!current || previous.includes(current)) break;
+	const actions: { [key: string]: (value: number) => void } = {
+		[Operation.Accumulate]: (value) => {
+			accumulator += value;
+			++index;
+		},
+		[Operation.NoOperation]: (_) => ++index,
+		[Operation.Jump]: (value) => (index += value),
+	};
+	let current: Instruction = instructions[index];
+	while (current && !previous.includes(current)) {
 		previous.push(current);
-		const operation = changeOperation ? changeOperation(current) : current.operation;
-		switch (operation) {
-			case Operation.Accumulate:
-				accumulator += current.value;
-			case Operation.NoOperation:
-				index++;
-				break;
-			case Operation.Jump:
-				index += current.value;
-				break;
-		}
+		actions[changeOperation ? changeOperation(current) : current.operation](current.value);
+		current = instructions[index];
 	}
 	return { accumulator, completed: index === instructions.length };
 }
