@@ -6,19 +6,14 @@ export function part2(input: string): number | undefined {
 	const instructions = processInstructions(input);
 	for (const instruction of instructions) {
 		if (instruction.operation === Operation.Accumulate) continue;
+		const operationMapper: { [key: string]: Operation } = {
+			[Operation.NoOperation]: Operation.Jump,
+			[Operation.Jump]: Operation.NoOperation,
+		};
 		const run = execute(
 			instructions,
-			(current: Instruction): Operation => {
-				if (instruction === current) {
-					switch (current.operation) {
-						case Operation.NoOperation:
-							return Operation.Jump;
-						case Operation.Jump:
-							return Operation.NoOperation;
-					}
-				}
-				return current.operation;
-			},
+			(current: Instruction): Operation =>
+				instruction === current ? operationMapper[current.operation] : current.operation,
 		);
 		if (run.completed) return run.accumulator;
 	}
@@ -54,7 +49,7 @@ function execute(
 	const previous: Instruction[] = [];
 	while (true) {
 		const current: Instruction = instructions[index];
-		if (previous.includes(current)) break;
+		if (!current || previous.includes(current)) break;
 		previous.push(current);
 		const operation = changeOperation ? changeOperation(current) : current.operation;
 		switch (operation) {
@@ -67,7 +62,6 @@ function execute(
 				index += current.value;
 				break;
 		}
-		if (index === instructions.length) return { accumulator, completed: true };
 	}
-	return { accumulator, completed: false };
+	return { accumulator, completed: index === instructions.length };
 }
