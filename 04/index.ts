@@ -1,10 +1,5 @@
-export function part1(input: string) {
-	return processPassports(input).filter((x: Passport) => x.propertiesExist()).length;
-}
-
-export function part2(input: string) {
-	return processPassports(input).filter((x: Passport) => x.isValid()).length;
-}
+export const part1 = (input: string) => processPassports(input).filter((x: Passport) => x.propertiesExist()).length;
+export const part2 = (input: string) => processPassports(input).filter((x: Passport) => x.isValid()).length;
 
 function processPassports(input: string): Passport[] {
 	return input.split('\n\n').map((x: string) => {

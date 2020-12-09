@@ -1,6 +1,4 @@
-export function part1(input: string): number {
-	return Math.max(...processSeats(input));
-}
+export const part1 = (input: string): number => Math.max(...processSeats(input));
 
 export function part2(input: string): number {
 	const seats = processSeats(input);

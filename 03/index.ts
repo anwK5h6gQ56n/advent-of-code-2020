@@ -1,6 +1,4 @@
-export function part1(input: string): number {
-	return encounterTrees(input.split('\n'), 3);
-}
+export const part1 = (input: string): number => encounterTrees(input.split('\n'), 3);
 
 export function part2(input: string): number {
 	const rows = input.split('\n');

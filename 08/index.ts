@@ -1,6 +1,4 @@
-export function part1(input: string): number {
-	return execute(processInstructions(input)).accumulator;
-}
+export const part1 = (input: string): number => execute(processInstructions(input)).accumulator;
 
 export function part2(input: string): number | undefined {
 	const instructions = processInstructions(input);
