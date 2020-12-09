@@ -7,7 +7,7 @@ export function part2(input: string): number | undefined {
 	const outcast = findOutcastNumber(numbers) || 0;
 	let index = 0;
 	let cumulative = 0;
-  let visited: number[] = [];
+	let visited: number[] = [];
 	while (outcast !== cumulative || visited.length < 2 || visited.length === numbers.length) {
 		if (cumulative > outcast) {
 			index -= visited.length - 1;
