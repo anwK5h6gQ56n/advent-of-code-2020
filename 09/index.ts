@@ -30,6 +30,6 @@ function findOutcastNumber(numbers: number[]): number | undefined {
 	for (let index = PREAMBLENUMBER; index < numbers.length; index++) {
 		const sum = numbers[index];
 		const preamble = numbers.slice(index - PREAMBLENUMBER, index);
-		if (!preamble.some((x) => !~preamble.filter((y) => y !== x).indexOf(sum - x))) return sum;
+		if (!preamble.some((x) => !!~preamble.filter((y) => y !== x).indexOf(sum - x))) return sum;
 	}
 }
