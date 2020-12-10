@@ -1,8 +1,9 @@
 export function part1(input: string): number {
 	const adapters = processAdapters(input);
-	const one = adapters.filter((adapter, index) => adapter - adapters[index - 1] === 1).length;
-	const three = adapters.filter((adapter, index) => adapter - adapters[index - 1] === 3).length;
-	return one * three;
+	return (
+		adapters.filter((adapter, index) => adapter - adapters[index - 1] === 1).length *
+		adapters.filter((adapter, index) => adapter - adapters[index - 1] === 3).length
+	);
 }
 
 export function part2(input: any): number {
