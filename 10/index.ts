@@ -21,8 +21,11 @@ export function part2(input: any): number {
 }
 
 function processAdapters(data: string) {
-	const adapters = data.split('\n').map((x) => +x);
-	return [0, ...adapters, Math.max(...adapters) + 3].sort((a, b) => a - b);
+	const adapters = data
+		.split('\n')
+		.map((x) => +x)
+		.sort((a, b) => a - b);
+	return [0, ...adapters, adapters[adapters.length - 1] + 3];
 }
 
 function mapLengths(index: number): number {
