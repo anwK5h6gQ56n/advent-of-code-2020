@@ -30,7 +30,7 @@ function processAdapters(data: string) {
 }
 
 function mapLengths(index: number): number {
-	if (index === 0) return 0;
+	if (index < 1) return 0;
 	if (index < 3) return 1;
 	return mapLengths(index - 1) + mapLengths(index - 2) + mapLengths(index - 3);
 }
