@@ -1,13 +1,5 @@
-const NEIGHBOR_DIR = [
-	[-1, -1],
-	[-1, 0],
-	[-1, 1],
-	[0, -1],
-	[0, 1],
-	[1, -1],
-	[1, 0],
-	[1, 1],
-];
+// prettier-ignore
+const NEIGHBOR_DIR = [[-1, -1],[-1, 0],[-1, 1],[0, -1],[0, 1],[1, -1],[1, 0],[1, 1]];
 
 export const part1 = (input: string) => getFilledSeats(input, false);
 
