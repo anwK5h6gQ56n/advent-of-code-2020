@@ -6,8 +6,8 @@ const dirActions = (loc: { x: number; y: number }): { [key: string]: (unit: numb
 });
 
 export function part1(input: string) {
-	// prettier-ignore
-	let loc = {x: 0, y: 0}, dir = Direction.East;
+	const loc = { x: 0, y: 0 };
+	let dir = Direction.East;
 	const changeDirection = (unit: number, clockwise: boolean): Direction => {
 		let rotation = [Direction.North, Direction.East, Direction.South, Direction.West];
 		if (!clockwise) rotation = rotation.reverse();
@@ -24,8 +24,8 @@ export function part1(input: string) {
 }
 
 export function part2(input: string) {
-	// prettier-ignore
-	let loc = { x: 0, y: 0 }, wpLoc = { x: 10, y: 1 };
+	const loc = { x: 0, y: 0 };
+	const wpLoc = { x: 10, y: 1 };
 	runInstructions(input, {
 		...dirActions(wpLoc),
 		[Direction.Left]: (unit) => {
