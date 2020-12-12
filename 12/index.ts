@@ -25,18 +25,18 @@ export function part1(input: string) {
 
 export function part2(input: string) {
 	// prettier-ignore
-	let loc = { x: 0, y: 0 },	waypointLoc = { x: 10, y: 1 };
+	let loc = { x: 0, y: 0 }, wpLoc = { x: 10, y: 1 };
 	runInstructions(input, {
-		...dirActions(waypointLoc),
+		...dirActions(wpLoc),
 		[Direction.Left]: (unit) => {
-			for (let i = 1; i <= unit / 90; i++) [waypointLoc.x, waypointLoc.y] = [-waypointLoc.y, waypointLoc.x];
+			for (let i = 1; i <= unit / 90; i++) [wpLoc.x, wpLoc.y] = [-wpLoc.y, wpLoc.x];
 		},
 		[Direction.Right]: (unit) => {
-			for (let i = 1; i <= unit / 90; i++) [waypointLoc.x, waypointLoc.y] = [waypointLoc.y, -waypointLoc.x];
+			for (let i = 1; i <= unit / 90; i++) [wpLoc.x, wpLoc.y] = [wpLoc.y, -wpLoc.x];
 		},
 		[Direction.Forward]: (unit) => {
-			loc.x += unit * waypointLoc.x;
-			loc.y += unit * waypointLoc.y;
+			loc.x += unit * wpLoc.x;
+			loc.y += unit * wpLoc.y;
 		},
 	});
 	return Math.abs(loc.x) + Math.abs(loc.y);
