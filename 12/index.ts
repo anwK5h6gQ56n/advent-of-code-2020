@@ -22,7 +22,7 @@ export function part1(input: string) {
 export function part2(input: string) {
 	// prettier-ignore
 	let x = 0, y = 0, waypointX = 10, waypointY = 1;
-	const actions: { [key: string]: (unit: number) => void } = {
+	runInstructions(input, {
 		[Direction.North]: (unit) => (waypointY += unit),
 		[Direction.South]: (unit) => (waypointY -= unit),
 		[Direction.East]: (unit) => (waypointX += unit),
@@ -37,15 +37,14 @@ export function part2(input: string) {
 			x += unit * waypointX;
 			y += unit * waypointY;
 		},
-	};
-	runInstructions(input, actions);
+	});
 	return Math.abs(x) + Math.abs(y);
 }
 
 function runInstructions(data: string, actions: { [key: string]: (unit: number) => void }): void {
 	data.split('\n').forEach((x: string) => {
-		const match = [...x.matchAll(/^(\w)(\d+)$/g)][0];
-		actions[match[1]](+match[2]);
+		const [, dir, unit] = [...x.matchAll(/^(\w)(\d+)$/g)][0];
+		actions[dir](+unit);
 	});
 }
 
