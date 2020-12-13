@@ -12,6 +12,8 @@ export function part1(input: string) {
 	return (bus.next - +arrival) * bus.id;
 }
 
+// https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
+// https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 export function part2(input: string) {
 	const [, buses] = input.split('\n');
 	const nixes = buses
