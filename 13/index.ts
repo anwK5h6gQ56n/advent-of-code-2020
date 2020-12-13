@@ -12,8 +12,6 @@ export function part1(input: string) {
 	return (bus.next - +arrival) * bus.id;
 }
 
-// https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
-// https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 export function part2(input: string) {
 	const [, buses] = input.split('\n');
 	const nixes = buses
@@ -21,8 +19,7 @@ export function part2(input: string) {
 		.map((x: string, index: number): NIx => ({ num: +x, i: index }))
 		.filter((nindex: NIx) => !isNaN(nindex.num));
 	const n = nixes.reduce((a, b) => a * b.num, 1);
-	const mmi = (a: number, b: number): number =>
-		a === 0 ? 0 : b % a == 0 ? 1 : b - Math.floor((mmi(b % a, a) * b) / a);
+	const mmi = (a: number, b: number): number => (!a || b % a == 0 ? 1 : b - Math.floor((mmi(b % a, a) * b) / a));
 	const x = nixes.reduce((a, b) => (a += b.i * Math.floor(n / b.num) * mmi(Math.floor(n / b.num), b.num)), 0);
 	return n - (x % n) + nixes.length;
 }
