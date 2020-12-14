@@ -10,7 +10,6 @@ export function part1(input: string) {
 		});
 	});
 	return Object.values(result).reduce((a, b) => a + b);
-	return map;
 }
 
 export function part2(input: string) {
