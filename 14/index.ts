@@ -5,18 +5,11 @@ export function part1(input: string) {
 	const map = processBitMasks(input);
 	Object.keys(map).forEach((mask: string) => {
 		map[mask].forEach((bits) => {
-			const binary = bits.value
-				.toString(2)
-				.padStart(maskLength, '0')
-				.split('')
-				.map((bit, index) => (mask[index] === 'X' ? bit : mask[index]))
-				.join('');
+			const binary = processMask(bits.value, (bit, index) => (mask[index] === 'X' ? bit : mask[index]));
 			result[bits.memory] = parseInt(binary, 2);
 		});
 	});
-	return Object.keys(result)
-		.map((x) => result[x])
-		.reduce((a, b) => a + b);
+	return Object.values(result).reduce((a, b) => a + b);
 }
 
 export function part2(input: string) {
@@ -26,19 +19,16 @@ export function part2(input: string) {
 		!~x.indexOf('X') ? [x] : [...processFloats(x.replace('X', '0')), ...processFloats(x.replace('X', '1'))];
 	Object.keys(map).forEach((mask: string) => {
 		map[mask].forEach((bits) => {
-			processFloats(
-				bits.memory
-					.toString(2)
-					.padStart(maskLength, '0')
-					.split('')
-					.map((bit, index) => (mask[index] === '0' ? bit : mask[index]))
-					.join(''),
-			).forEach((memory: string) => (result[parseInt(memory, 2)] = bits.value));
+			processFloats(processMask(bits.memory, (bit, index) => (mask[index] === '0' ? bit : mask[index]))).forEach(
+				(memory: string) => (result[parseInt(memory, 2)] = bits.value),
+			);
 		});
 	});
-	return Object.keys(result)
-		.map((x) => result[x])
-		.reduce((a, b) => a + b);
+	return Object.values(result).reduce((a, b) => a + b);
+}
+
+function processMask(value: number, mask: (bit: string, index: number) => string): string {
+	return value.toString(2).padStart(maskLength, '0').split('').map(mask).join('');
 }
 
 function processBitMasks(data: string): { [key: string]: [{ memory: number; value: number }] } {
