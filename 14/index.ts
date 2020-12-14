@@ -22,9 +22,9 @@ export function part1(input: string) {
 export function part2(input: string) {
 	const result: { [key: string]: number } = {};
 	const map = processBitMasks(input);
-	const processFloating = (value: string): string[] => {
-		if (value.indexOf('X') === -1) return [value];
-		return [...processFloating(value.replace('X', '0')), ...processFloating(value.replace('X', '1'))];
+	const processFloating = (maskedBits: string): string[] => {
+		if (maskedBits.indexOf('X') === -1) return [maskedBits];
+		return [...processFloating(maskedBits.replace('X', '0')), ...processFloating(maskedBits.replace('X', '1'))];
 	};
 	Object.keys(map).forEach((mask: string) => {
 		map[mask].forEach((bits) => {
