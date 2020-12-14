@@ -22,13 +22,11 @@ export function part1(input: string) {
 export function part2(input: string) {
 	const result: { [key: string]: number } = {};
 	const map = processBitMasks(input);
-	const processFloating = (x: string): string[] => {
-		if (x.indexOf('X') === -1) return [x];
-		return [...processFloating(x.replace('X', '0')), ...processFloating(x.replace('X', '1'))];
-	};
+	const processFloats = (x: string): string[] =>
+		!~x.indexOf('X') ? [x] : [...processFloats(x.replace('X', '0')), ...processFloats(x.replace('X', '1'))];
 	Object.keys(map).forEach((mask: string) => {
 		map[mask].forEach((bits) => {
-			processFloating(
+			processFloats(
 				bits.memory
 					.toString(2)
 					.padStart(maskLength, '0')
