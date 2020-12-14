@@ -43,8 +43,8 @@ export function part2(input: string) {
 }
 
 function runInstructions(data: string, actions: { [key: string]: (unit: number) => void }): void {
-	data.split('\n').forEach((x: string) => {
-		const [, dir, unit] = [...x.matchAll(/^(\w)(\d+)$/g)][0];
+	[...data.matchAll(/^(\w)(\d+)$/gm)].forEach((x: RegExpMatchArray) => {
+		const [, dir, unit] = x;
 		actions[dir](+unit);
 	});
 }

@@ -29,11 +29,10 @@ interface Instruction {
 }
 
 function processInstructions(data: string): Instruction[] {
-	return data.split('\n').map((x: string) => {
-		const instruction = [...x.matchAll(/^(\w+) ([+-]\d+)$/g)][0];
+	return [...data.matchAll(/^(\w+) ([+-]\d+)$/g)].map((x: RegExpMatchArray) => {
 		return {
-			operation: instruction[1] as Operation,
-			value: +instruction[2],
+			operation: x[1] as Operation,
+			value: +x[2],
 		};
 	});
 }

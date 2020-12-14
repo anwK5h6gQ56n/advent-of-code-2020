@@ -10,6 +10,7 @@ export function part1(input: string) {
 		});
 	});
 	return Object.values(result).reduce((a, b) => a + b);
+	return map;
 }
 
 export function part2(input: string) {
@@ -34,8 +35,8 @@ function processMask(value: number, mask: (bit: string, index: number) => string
 function processBitMasks(data: string): { [key: string]: [{ memory: number; value: number }] } {
 	const result: { [key: string]: [{ memory: number; value: number }] } = {};
 	let mask: string;
-	data.split('\n').forEach((x) => {
-		const [, bitmask, memory, value] = [...x.matchAll(/^(?:mask = ([01X]+)|mem\[(\d+)\] = (\d+))$/g)][0];
+	[...data.matchAll(/^(?:mask = ([01X]+)|mem\[(\d+)\] = (\d+))$/gm)].forEach((x: RegExpMatchArray) => {
+		const [, bitmask, memory, value] = x;
 		mask = bitmask || mask;
 		if (!result[mask]) result[mask] = [] as any;
 		else result[mask].push({ memory: +memory, value: +value });

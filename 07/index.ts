@@ -23,7 +23,7 @@ interface Rules {
 function processRules(data: string): Rules {
 	return [...data.matchAll(/((^\w+\b.*) bags contain (.*)\.)/gm)].reduce((rules: Rules, x: Array<string>) => {
 		rules[x[2]] = x[3].split(', ').reduce((bags: { [key: string]: number }, y: string) => {
-			const types: Array<string> = [...y.matchAll(/((\d+) (.*) bags?)/g)][0];
+			const types: RegExpMatchArray | null = y.match(/((\d+) (.*) bags?)/);
 			if (types && types[3]) bags[types[3]] = +types[2];
 			return bags;
 		}, {});
