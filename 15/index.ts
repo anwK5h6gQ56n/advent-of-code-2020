@@ -10,14 +10,11 @@ function processNumbers(input: string, goal: number) {
 			(a as any)[`x${b}`] = i + 1;
 			return a;
 		}, {});
-	console.log(memory);
 	let curr = +(Object.keys(memory).pop() || 0);
-	let index = Object.keys(memory).length;
-	while (index < goal) {
+	for (let index = Object.keys(memory).length; index < goal; index++) {
 		const next = memory[`x${curr}`] ? index - memory[`x${curr}`] : 0;
 		memory[`x${curr}`] = index;
 		curr = next;
-		index++;
 	}
 	return curr;
 }
