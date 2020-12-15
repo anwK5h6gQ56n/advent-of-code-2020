@@ -11,9 +11,9 @@ function processNumbers(input: string, goal: number) {
 			return a;
 		}, {});
 	let curr = +(Object.keys(memory).pop() || 0);
-	for (let index = Object.keys(memory).length; index < goal; index++) {
-		const next = memory[`x${curr}`] ? index - memory[`x${curr}`] : 0;
-		memory[`x${curr}`] = index;
+	for (let turn = Object.keys(memory).length; turn < goal; turn++) {
+		const next = memory[`x${curr}`] ? turn - memory[`x${curr}`] : 0;
+		memory[`x${curr}`] = turn;
 		curr = next;
 	}
 	return curr;
