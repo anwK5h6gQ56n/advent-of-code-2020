@@ -13,18 +13,16 @@ export function part2(input: string) {
 		),
 	];
 	const foundFields: string[] = [];
-	let eligableFields = data.ticket.map((_, i) => {
-		return data.fields.filter((field: Field) => {
-			return validTickets.map((ticket) => ticket[i]).every((ticketField) => validateTicketField(ticketField, [field]));
-		});
-	});
+	let eligableFields = data.ticket.map((_, i) =>
+		data.fields.filter((field: Field) =>
+			validTickets.map((ticket) => ticket[i]).every((ticketField) => validateTicketField(ticketField, [field])),
+		),
+	);
 	while (foundFields.length < Object.keys(data.ticket).length) {
 		eligableFields.forEach((fields) => {
 			if (fields.length !== 1) return;
 			const field = fields[0];
-			if (!~foundFields.indexOf(field.name)) {
-				foundFields.push(field.name);
-			}
+			if (!~foundFields.indexOf(field.name)) foundFields.push(field.name);
 		});
 		eligableFields = eligableFields.map((fields) => {
 			if (fields.length === 1) return fields;
