@@ -1,36 +1,40 @@
 export function part1(input: string) {
-	const data = processInput(input);
-	const flatTickets = data.nearbyTickets.flat();
-	return flatTickets.filter((ticketField) => !validateTicketField(ticketField, data.fields)).reduce((a, b) => a + b);
+	const { fields, nearbyTickets } = processInput(input);
+	return nearbyTickets
+		.map((x) => x[0])
+		.filter((ticketField) => !validateTicketField(ticketField, fields))
+		.reduce((a, b) => a + b);
 }
 
 export function part2(input: string) {
-	const data = processInput(input);
+	const { fields, ticket, nearbyTickets } = processInput(input);
 	const validTickets = [
-		data.ticket,
-		...data.nearbyTickets.filter((ticket) =>
-			ticket.every((ticketField) => validateTicketField(ticketField, data.fields)),
-		),
+		ticket,
+		...nearbyTickets.filter((ticket) => ticket.every((ticketField) => validateTicketField(ticketField, fields))),
 	];
 	const foundFields: string[] = [];
-	let eligableFields = data.ticket.map((_, i) =>
-		data.fields.filter((field: Field) =>
+	let eligableFields = ticket.map((_, i) =>
+		fields.filter((field: Field) =>
 			validTickets.map((ticket) => ticket[i]).every((ticketField) => validateTicketField(ticketField, [field])),
 		),
 	);
-	while (foundFields.length < Object.keys(data.ticket).length) {
-		eligableFields.forEach((fields) => {
-			if (fields.length !== 1) return;
-			const field = fields[0];
-			if (!~foundFields.indexOf(field.name)) foundFields.push(field.name);
+	while (foundFields.length < Object.keys(ticket).length) {
+		eligableFields.forEach((innerFields) => {
+			if (innerFields.length !== 1) return;
+			const foundField = innerFields[0];
+			if (!~foundFields.indexOf(foundField.name)) foundFields.push(foundField.name);
 		});
-		eligableFields = eligableFields.map((fields) => {
-			if (fields.length === 1) return fields;
-			return fields.filter((field) => !~foundFields.indexOf(field.name));
-		});
+		eligableFields = eligableFields.map((fields) =>
+			fields.length !== 1 ? fields.filter((field) => !~foundFields.indexOf(field.name)) : fields,
+		);
 	}
-	const myTicket = eligableFields.flat().map((x, i): Field => ({ ...x, value: data.ticket[i] }));
-	return myTicket.filter((field: Field) => ~field.name.indexOf('departure')).reduce((a, b) => a * (b.value || 1), 1);
+	return eligableFields
+		.map((x) => x[0])
+		.filter((field: Field, i: number) => {
+			field.value = ticket[i];
+			return ~field.name.indexOf('departure');
+		})
+		.reduce((a, b) => a * (b.value || 1), 1);
 }
 
 function processInput(input: string) {
