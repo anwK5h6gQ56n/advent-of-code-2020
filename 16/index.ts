@@ -1,16 +1,16 @@
-export function part1(input: string) {
+export function part1(input: string): number {
 	const { fields, nearbyTickets } = processInput(input);
 	return nearbyTickets
-		.map((x) => x[0])
+		.flat()
 		.filter((ticketField) => !validateTicketField(ticketField, fields))
 		.reduce((a, b) => a + b);
 }
 
-export function part2(input: string) {
+export function part2(input: string): number {
 	const { fields, ticket, nearbyTickets } = processInput(input);
 	const validTickets = [
 		ticket,
-		...nearbyTickets.filter((ticket) => ticket.every((ticketField) => validateTicketField(ticketField, fields))),
+		...nearbyTickets.filter((x) => x.every((ticketField) => validateTicketField(ticketField, fields))),
 	];
 	const foundFields: string[] = [];
 	let eligableFields = ticket.map((_, i) =>
@@ -19,33 +19,31 @@ export function part2(input: string) {
 		),
 	);
 	while (foundFields.length < Object.keys(ticket).length) {
-		eligableFields.forEach((innerFields) => {
-			if (innerFields.length !== 1) return;
-			const foundField = innerFields[0];
-			if (!~foundFields.indexOf(foundField.name)) foundFields.push(foundField.name);
-		});
+		eligableFields.forEach(
+			([foundField, hasMultiple]) =>
+				!hasMultiple && !~foundFields.indexOf(foundField.name) && foundFields.push(foundField.name),
+		);
 		eligableFields = eligableFields.map((fields) =>
 			fields.length !== 1 ? fields.filter((field) => !~foundFields.indexOf(field.name)) : fields,
 		);
 	}
 	return eligableFields
-		.map((x) => x[0])
-		.filter((field: Field, i: number) => {
+		.filter(([field], i: number) => {
 			field.value = ticket[i];
 			return ~field.name.indexOf('departure');
 		})
-		.reduce((a, b) => a * (b.value || 1), 1);
+		.reduce((a, [b]) => a * (b.value || 1), 1);
 }
 
 function processInput(input: string) {
 	let [fieldsLns, ticketLns, nearbyTicketsLns] = input.split('\n\n');
 	const fields: Field[] = [...fieldsLns.matchAll(/^([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)$/gm)].map(
-		([, name, r1from, r1until, r2from, r2until]) => ({
+		([, name, r1f, r1u, r2f, r2u]) => ({
 			name,
-			r1from: +r1from,
-			r1until: +r1until,
-			r2from: +r2from,
-			r2until: +r2until,
+			r1f: +r1f,
+			r1u: +r1u,
+			r2f: +r2f,
+			r2u: +r2u,
 		}),
 	);
 	const ticketArray = ticketLns.split('\n');
@@ -59,19 +57,14 @@ function processInput(input: string) {
 	};
 }
 
-function validateTicketField(ticketField: number, fields: Field[]) {
-	return fields.some(
-		(field) =>
-			(ticketField >= field.r1from && ticketField <= field.r1until) ||
-			(ticketField >= field.r2from && ticketField <= field.r2until),
-	);
-}
+const validateTicketField = (val: number, fields: Field[]) =>
+	fields.some(({ r1f, r2f, r1u, r2u }) => (val >= r1f && val <= r1u) || (val >= r2f && val <= r2u));
 
 interface Field {
 	name: string;
-	r1from: number;
-	r1until: number;
-	r2from: number;
-	r2until: number;
+	r1f: number;
+	r1u: number;
+	r2f: number;
+	r2u: number;
 	value?: number;
 }
