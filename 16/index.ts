@@ -15,13 +15,11 @@ export function part2(input: string) {
 		),
 	];
 	const foundFields: string[] = [];
-	let eligableFields = processed.ticket
-		.map((_, i) => validTickets.map((ticket) => ticket[i]))
-		.map((valuesForOneField) => {
-			return processed.fields.filter((field: Field) => {
-				return valuesForOneField.every((ticketField) => validateTicketField(ticketField, [field]));
-			});
+	let eligableFields = processed.ticket.map((_, i) => {
+		return processed.fields.filter((field: Field) => {
+			return validTickets.map((ticket) => ticket[i]).every((ticketField) => validateTicketField(ticketField, [field]));
 		});
+	});
 	while (foundFields.length < Object.keys(processed.ticket).length) {
 		eligableFields.forEach((fields) => {
 			if (fields.length !== 1) return;
