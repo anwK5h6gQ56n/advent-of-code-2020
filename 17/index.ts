@@ -1,80 +1,77 @@
-export function part1(input: string) {
-	const grid = new Grid(input);
-	return grid.grid;
-}
+export const part1 = (input: string) => new PocketDimension(input).run();
 
-class Grid {
-	grid: { [key: number]: { [key: number]: { [key: number]: { [key: number]: string } } } };
+export const part2 = (input: string) => new PocketDimension(input, true).run();
 
-	constructor(input: string) {
+class PocketDimension {
+	private grid: { [key: number]: { [key: number]: { [key: number]: { [key: number]: boolean } } } } = {};
+
+	get = (x: number, y: number, z: number, w: number) =>
+		w in this.grid && z in this.grid[w] && y in this.grid[w][z] && x in this.grid[w][z][y] && this.grid[w][z][y][x];
+
+	set = (value: boolean, x: number, y: number, z: number, w: number) =>
+		((((this.grid[w] ||= {})[z] ||= {})[y] ||= {})[x] = !!value);
+
+	run(): number {
+		for (let i = 0; i < 6; i++) {
+			const ys = Object.values(this.grid).flatMap((w) =>
+				Object.values(w).flatMap((z) => Object.keys(z).map((y) => +y)),
+			);
+			const minY = Math.min(...ys);
+			const maxY = Math.max(...ys);
+			const xs = Object.values(this.grid).flatMap((w) =>
+				Object.values(w).flatMap((z) => Object.values(z).flatMap((y) => Object.keys(y).map((x) => +x))),
+			);
+			const minX = Math.min(...xs);
+			const maxX = Math.max(...xs);
+			const grid = PocketDimension.fromDimension(this);
+			for (let w = this.is4d ? -i - 1 : 0; w <= (this.is4d ? +i + 1 : 0); w++)
+				for (let z = -i - 1; z <= +i + 1; z++)
+					for (let y = minY - 1; y <= maxY + 1; y++)
+						for (let x = minX - 1; x <= maxX + 1; x++) {
+							const prev = this.get(x, y, z, w);
+							const neighbors = this.countNeighbors(x, y, z, w);
+							const next = (prev && neighbors >= 2 && neighbors <= 3) || (!prev && neighbors === 3);
+							if (prev || next) grid.set(next, x, y, z, w);
+						}
+			this.grid = grid.grid;
+		}
+		return Object.values(this.grid)
+			.flatMap((w) => Object.values(w))
+			.flatMap((z) => Object.values(z))
+			.flatMap((y) => Object.values(y))
+			.filter((x) => !!x).length;
+	}
+
+	countNeighbors(x: number, y: number, z: number, w: number) {
+		let count = 0;
+		for (let Δw of this.is4d ? [-1, 0, 1] : [0])
+			for (let Δz of [-1, 0, 1])
+				for (let Δy of [-1, 0, 1])
+					for (let Δx of [-1, 0, 1]) {
+						if ((Δx || Δy || Δz || Δw) && this.get(x + Δx, y + Δy, z + Δz, w + Δw)) count++;
+					}
+		return count;
+	}
+
+	constructor(input = '', private is4d = false) {
+		if (!input) return;
 		this.grid = Object.assign({}, [
-			Object.assign({}, [Object.assign({}, [...input.split('\n').map((x) => Object.assign({}, x.split('')))])]),
+			Object.assign({}, [
+				Object.assign({}, [
+					...input.split('\n').map((x) =>
+						Object.assign(
+							{},
+							x.split('').map((y) => y === '#'),
+						),
+					),
+				]),
+			]),
 		]);
 	}
 
-	abomination(): any {
-		// prettier:ignore
-		let minλ = Number.MAX_SAFE_INTEGER,
-			maxλ = 0,
-			minZ = Number.MAX_SAFE_INTEGER,
-			maxZ = 0,
-			minY = Number.MAX_SAFE_INTEGER,
-			maxY = 0,
-			minX = Number.MAX_SAFE_INTEGER,
-			maxX = 0;
-		const λkeys = Object.keys(this.grid).map(Number);
-		minλ = Math.min(...λkeys);
-		maxλ = Math.max(...λkeys);
-		const input = Object.values(this.grid)
-			.flatMap((λ) => {
-				const zKeys = Object.keys(λ).map(Number);
-				minZ = Math.min(...[minZ, ...zKeys]);
-				maxZ = Math.max(...[maxZ, ...zKeys]);
-				return Object.values(λ).flatMap((z) => {
-					const yKeys = Object.keys(z).map(Number);
-					minY = Math.min(...[minY, ...yKeys]);
-					maxY = Math.max(...[maxY, ...yKeys]);
-					return Object.values(z).flatMap((y) => {
-						const xKeys = Object.keys(y).map(Number);
-						minX = Math.min(...[minX, ...xKeys]);
-						maxX = Math.max(...[maxX, ...xKeys]);
-						return Object.values(y)
-							.flatMap((x) => x)
-							.join('');
-					});
-				});
-			})
-			.join('\n');
-		return {
-			input,
-			minλ,
-			maxλ,
-			minZ,
-			maxZ,
-			minY,
-			maxY,
-			minX,
-			maxX,
-		};
-	}
-
-	get(x: number, y: number, z: number, λ = 0) {
-		return (
-			(λ in this.grid &&
-				z in this.grid[λ] &&
-				y in this.grid[λ][z] &&
-				x in this.grid[λ][z][y] &&
-				this.grid[λ][z][y][x]) ||
-			null
-		);
-	}
-
-	set(value: '#' | '.', x: number, y: number, z: number, λ = 0) {
-		(((this.grid[λ] ||= {})[z] ||= {})[y] ||= {})[x] = value;
-	}
-
-	process(): Grid {
-		const grid = new Grid(this.grid.toString());
-		return grid;
+	static fromDimension(dimension: PocketDimension): PocketDimension {
+		let newGrid = new PocketDimension('', dimension.is4d);
+		newGrid.grid = JSON.parse(JSON.stringify(dimension.grid));
+		return newGrid;
 	}
 }
