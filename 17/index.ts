@@ -1,3 +1,5 @@
+const vals = Object.values;
+
 export const part1 = (input: string) => new PocketDimension(input).run();
 
 export const part2 = (input: string) => new PocketDimension(input, true).run();
@@ -13,21 +15,19 @@ class PocketDimension {
 
 	run(): number {
 		for (let i = 0; i < 6; i++) {
-			const ys = Object.values(this.grid).flatMap((w) =>
-				Object.values(w).flatMap((z) => Object.keys(z).map((y) => +y)),
+			const yVals = vals(this.grid).flatMap((w) => vals(w).flatMap((z) => Object.keys(z).map((y) => +y)));
+			const yMin = Math.min(...yVals);
+			const yMax = Math.max(...yVals);
+			const xVals = vals(this.grid).flatMap((w) =>
+				vals(w).flatMap((z) => vals(z).flatMap((y) => Object.keys(y).map((x) => +x))),
 			);
-			const minY = Math.min(...ys);
-			const maxY = Math.max(...ys);
-			const xs = Object.values(this.grid).flatMap((w) =>
-				Object.values(w).flatMap((z) => Object.values(z).flatMap((y) => Object.keys(y).map((x) => +x))),
-			);
-			const minX = Math.min(...xs);
-			const maxX = Math.max(...xs);
+			const xMin = Math.min(...xVals);
+			const xMax = Math.max(...xVals);
 			const grid = PocketDimension.fromDimension(this);
 			for (let w = this.is4d ? -i - 1 : 0; w <= (this.is4d ? +i + 1 : 0); w++)
 				for (let z = -i - 1; z <= +i + 1; z++)
-					for (let y = minY - 1; y <= maxY + 1; y++)
-						for (let x = minX - 1; x <= maxX + 1; x++) {
+					for (let y = yMin - 1; y <= yMax + 1; y++)
+						for (let x = xMin - 1; x <= xMax + 1; x++) {
 							const prev = this.get(x, y, z, w);
 							const neighbors = this.countNeighbors(x, y, z, w);
 							const next = (prev && neighbors >= 2 && neighbors <= 3) || (!prev && neighbors === 3);
@@ -35,10 +35,10 @@ class PocketDimension {
 						}
 			this.grid = grid.grid;
 		}
-		return Object.values(this.grid)
-			.flatMap((w) => Object.values(w))
-			.flatMap((z) => Object.values(z))
-			.flatMap((y) => Object.values(y))
+		return vals(this.grid)
+			.flatMap((w) => vals(w))
+			.flatMap((z) => vals(z))
+			.flatMap((y) => vals(y))
 			.filter((x) => !!x).length;
 	}
 
