@@ -1,4 +1,12 @@
 export function part1(input: string) {
+	return getImage(input)
+		.filter((tileId, i, tileIds) => tileIds.indexOf(tileId) !== i)
+		.reduce((a, b) => a * b);
+}
+
+export function part2() {}
+
+function getImage(input: string) {
 	return Object.values(
 		Tile.processTiles(input).reduce((borders, tile) => {
 			tile.borders.forEach((x) => {
@@ -10,12 +18,8 @@ export function part1(input: string) {
 		}, {} as { [key: string]: number[] }),
 	)
 		.filter((tileIds) => tileIds.length === 1)
-		.flat()
-		.filter((tileId, i, tileIds) => tileIds.indexOf(tileId) !== i)
-		.reduce((a, b) => a * b);
+		.flat();
 }
-
-export function part2() {}
 
 class Tile {
 	id: number;
