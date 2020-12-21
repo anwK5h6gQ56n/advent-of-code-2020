@@ -1,7 +1,7 @@
 export function part1(input: string) {
 	const borders = Tile.processTiles(input).reduce((borders, tile) => {
 		tile.borders.forEach((x) => {
-			const border = [x.join(''), [...x].reverse().join('')].sort()[0];
+			const border = [x.join(''), x.reverse().join('')].sort()[0];
 			borders[border] ||= [];
 			borders[border].push(tile.id);
 		});
