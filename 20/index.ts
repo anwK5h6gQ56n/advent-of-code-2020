@@ -1,13 +1,14 @@
 export function part1(input: string) {
-	const borders = Tile.processTiles(input).reduce((borders, tile) => {
-		tile.borders.forEach((x) => {
-			const border = [x.join(''), x.reverse().join('')].sort()[0];
-			borders[border] ||= [];
-			borders[border].push(tile.id);
-		});
-		return borders;
-	}, {} as { [key: string]: number[] });
-	return Object.values(borders)
+	return Object.values(
+		Tile.processTiles(input).reduce((borders, tile) => {
+			tile.borders.forEach((x) => {
+				const border = [x.join(''), x.reverse().join('')].sort()[0];
+				borders[border] ||= [];
+				borders[border].push(tile.id);
+			});
+			return borders;
+		}, {} as { [key: string]: number[] }),
+	)
 		.filter((tileIds) => tileIds.length === 1)
 		.flat()
 		.filter((tileId, i, tileIds) => tileIds.indexOf(tileId) !== i)
