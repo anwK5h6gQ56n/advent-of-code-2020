@@ -1,15 +1,8 @@
-export function part1(input: string) {
-	return getImage(input)
-		.filter((tileId, i, tileIds) => tileIds.indexOf(tileId) !== i)
-		.reduce((a, b) => a * b);
-}
-
-export function part2() {}
-
-function getImage(input: string) {
+export function part1(input: string): number {
 	return Object.values(
 		Tile.processTiles(input).reduce((borders, tile) => {
 			tile.borders.forEach((x) => {
+				// A border flipped is the same border.
 				const border = [x.join(''), x.reverse().join('')].sort()[0];
 				borders[border] ||= [];
 				borders[border].push(tile.id);
@@ -18,7 +11,13 @@ function getImage(input: string) {
 		}, {} as { [key: string]: number[] }),
 	)
 		.filter((tileIds) => tileIds.length === 1)
-		.flat();
+		.flat()
+		.filter((tileId, i, tileIds) => tileIds.indexOf(tileId) !== i)
+		.reduce((a, b) => a * b);
+}
+
+export function part2(input: string) {
+  
 }
 
 class Tile {
