@@ -6,7 +6,7 @@ export function part1(input: string): number {
 
 export function part2(input: string) {
 	const image = new Image(input);
-	return image.matrix;
+	//return image.matrix;
 }
 
 function findTilesNeighbors(tiles: Tile[]): TileBorderNeighbors {
@@ -25,15 +25,6 @@ function findEdgeTileIds(tileBorderNeighbors: TileBorderNeighbors): number[] {
 	return Object.values(tileBorderNeighbors)
 		.filter((tileIds) => tileIds.length === 1)
 		.flat();
-}
-
-interface TileBorderNeighbors {
-	[key: string]: number[];
-}
-
-interface Coordinate {
-	x: number;
-	y: number;
 }
 
 class Tile {
@@ -85,7 +76,7 @@ class Image {
 		this.neighbors = findTilesNeighbors(this.tiles);
 		const rootTile = findEdgeTileIds(this.neighbors)
 			.filter((tileId, i, tileIds) => tileIds.indexOf(tileId) !== i)
-			.map((x) => this.tiles.find((tile) => tile.id === x) || new Tile(''))[0];
+			.map((x) => this.tiles.find((tile) => tile.id === x) || new Tile(''))[1];
 		this.matrix = { 0: { 0: rootTile } };
 		const findPosition = {
 			[Direction.Top]: (origin: Tile) => {
@@ -102,11 +93,12 @@ class Image {
 			},
 		};
 		while (this.matrixValues.some((x) => !x.processed)) {
-			console.log('AGAIN');
 			this.matrixValues
 				.filter((tile) => !tile.processed)
 				.forEach((unprocessedTile) => {
-					this.findTilesForTile(unprocessedTile).forEach((relative) => {
+					const bla = this.findTilesForTile(unprocessedTile);
+					console.log(bla);
+					bla.forEach((relative) => {
 						relative.tile.coordinate = findPosition[relative.dir](unprocessedTile);
 						if (!(this.matrix[relative.tile.coordinate.y] ||= {})[relative.tile.coordinate.x])
 							(this.matrix[relative.tile.coordinate.y] ||= {})[relative.tile.coordinate.x] = relative.tile;
@@ -150,6 +142,15 @@ class Image {
 		tile.processed = true;
 		return found;
 	}
+}
+
+interface TileBorderNeighbors {
+	[key: string]: number[];
+}
+
+interface Coordinate {
+	x: number;
+	y: number;
 }
 
 enum Direction {
