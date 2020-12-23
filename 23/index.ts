@@ -25,28 +25,17 @@ class Game {
 	length: number;
 
 	constructor(...values: number[]) {
-		let mainCup: any = { value: values.shift() };
-		mainCup.prev = mainCup;
-		mainCup.next = mainCup;
-		this.head = mainCup as Cup;
-		this.source = { [mainCup.value]: mainCup };
-		values.forEach((value: number) => {
-			this.push({ value });
-		});
+		let head: any = { value: values.shift() };
+		this.head = (head.next = head.prev = head) as Cup;
+		this.source = { [head.value]: head };
+		values.forEach((value: number) => this.push({ value }));
 		this.length = Object.keys(this.source).length;
 	}
 
-	push({ value }: { value: number }): Cup {
-		return this.insert(this.head.prev, value);
-	}
+	push = ({ value }: { value: number }): Cup => this.insert(this.head.prev, value);
 
-	insert(prev: Cup, value: number): Cup {
-		const cup = { value, prev, next: prev.next };
-		this.source[value] = cup;
-		prev.next.prev = cup;
-		prev.next = cup;
-		return cup;
-	}
+	insert = (prev: Cup, value: number): Cup =>
+		(this.source[value] = prev.next = prev.next.prev = { value, prev, next: prev.next });
 
 	remove(cup: Cup): Cup {
 		if (cup === this.head) this.head = cup.next;
