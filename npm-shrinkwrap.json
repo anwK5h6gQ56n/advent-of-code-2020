@@ -8,7 +8,8 @@
 			"version": "1.0.0",
 			"license": "ISC",
 			"dependencies": {
-				"advent-of-code": "^5.0.0"
+				"advent-of-code": "^5.0.0",
+				"linked-list-typescript": "^1.0.15"
 			},
 			"devDependencies": {
 				"typescript": "^4.1.2"
@@ -351,6 +352,11 @@
 				"json-schema": "0.2.3",
 				"verror": "1.10.0"
 			}
+		},
+		"node_modules/linked-list-typescript": {
+			"version": "1.0.15",
+			"resolved": "https://registry.npmjs.org/linked-list-typescript/-/linked-list-typescript-1.0.15.tgz",
+			"integrity": "sha512-RIyUu9lnJIyIaMe63O7/aFv/T2v3KsMFuXMBbUQCHX+cgtGro86ETDj5ed0a8gQL2+DFjzYYsgVG4I36/cUwgw=="
 		},
 		"node_modules/lodash": {
 			"version": "4.17.20",
@@ -930,6 +936,11 @@
 				"json-schema": "0.2.3",
 				"verror": "1.10.0"
 			}
+		},
+		"linked-list-typescript": {
+			"version": "1.0.15",
+			"resolved": "https://registry.npmjs.org/linked-list-typescript/-/linked-list-typescript-1.0.15.tgz",
+			"integrity": "sha512-RIyUu9lnJIyIaMe63O7/aFv/T2v3KsMFuXMBbUQCHX+cgtGro86ETDj5ed0a8gQL2+DFjzYYsgVG4I36/cUwgw=="
 		},
 		"lodash": {
 			"version": "4.17.20",

@@ -93,18 +93,18 @@ class Image {
 			},
 		};
 		while (this.matrixValues.some((x) => !x.processed)) {
-			this.matrixValues
-				.filter((tile) => !tile.processed)
-				.forEach((unprocessedTile) => {
-					const bla = this.findTilesForTile(unprocessedTile);
-					console.log(bla);
-					bla.forEach((relative) => {
-						relative.tile.coordinate = findPosition[relative.dir](unprocessedTile);
-						if (!(this.matrix[relative.tile.coordinate.y] ||= {})[relative.tile.coordinate.x])
-							(this.matrix[relative.tile.coordinate.y] ||= {})[relative.tile.coordinate.x] = relative.tile;
-					});
+			const notProcessed = [...this.matrixValues.filter((tile) => !tile.processed)];
+			console.log(`\n\n==NEW RUN`);
+			notProcessed.forEach((unprocessedTile) => {
+				this.findTilesForTile(unprocessedTile).forEach((relative) => {
+					relative.tile.coordinate = findPosition[relative.dir](unprocessedTile);
+					if (!(this.matrix[relative.tile.coordinate.y] ||= {})[relative.tile.coordinate.x])
+						(this.matrix[relative.tile.coordinate.y] ||= {})[relative.tile.coordinate.x] = relative.tile;
 				});
+				unprocessedTile.processed = true;
+			});
 		}
+		console.log(this.matrix);
 	}
 
 	private findTilesForTile(tile: Tile): { dir: Direction; tile: Tile }[] {
@@ -137,9 +137,8 @@ class Image {
 					}
 				}
 			}
-			dir++;
 		}
-		tile.processed = true;
+		console.log(found);
 		return found;
 	}
 }

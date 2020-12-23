@@ -70,7 +70,8 @@
 		"nameTemplate": "{{num}}/index.js"
 	},
 	"dependencies": {
-		"advent-of-code": "^5.0.0"
+		"advent-of-code": "^5.0.0",
+		"linked-list-typescript": "^1.0.15"
 	},
 	"devDependencies": {
 		"typescript": "^4.1.2"
