@@ -116,7 +116,7 @@ class Image {
 				const neighborTileId = neighborsForBorder.find((x) => tile.id !== x);
 				if (neighborTileId) {
 					const neighborTile = this.tiles.find((tile) => tile.id === neighborTileId);
-					if (neighborTile) {
+					if (neighborTile && !neighborTile.processed) {
 						for (let rotation = 0; rotation < 4; rotation++) {
 							neighborTile.rotated = rotation;
 							const foundTileOppositeBorder = neighborTile.borders[(dir + 2) % 4];
@@ -133,12 +133,11 @@ class Image {
 								break;
 							}
 						}
-						(found ||= []).push({ dir, tile: neighborTile });
+						found.push({ dir, tile: neighborTile });
 					}
 				}
 			}
 		}
-		console.log(found);
 		return found;
 	}
 }
