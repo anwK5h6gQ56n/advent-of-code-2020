@@ -26,16 +26,11 @@ export function part2(input: string) {
 function processInstructions(input: string): Direction[][] {
 	return input
 		.split('\n')
-		.map(
-			(instruction) =>
-				instruction
-					.replace(/ne/g, Direction.NE)
-					.replace(/se/g, Direction.SE)
-					.replace(/e/g, Direction.E)
-					.replace(/nw/g, Direction.NW)
-					.replace(/sw/g, Direction.SW)
-					.replace(/w/g, Direction.W)
-					.split('') as Direction[],
+		.map((instruction) =>
+			(instruction.match(/(?:(?:n|s)(?:[e,w]){1}|e|w)/gi) || []).reduce(
+				(instruction, direction) => [...instruction, direction as Direction],
+				[] as Direction[],
+			),
 		);
 }
 
@@ -103,10 +98,10 @@ class HexagonGrid {
 }
 
 enum Direction {
-	NE = '↗',
-	SE = '↘',
-	E = '➡',
-	NW = '↖',
-	SW = '↙',
-	W = '⬅',
+	NE = 'ne',
+	SE = 'se',
+	E = 'e',
+	NW = 'nw',
+	SW = 'sw',
+	W = 'w',
 }
