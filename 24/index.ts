@@ -1,14 +1,14 @@
 export function part1(input: string): number {
-	return HexagonGrid.fromInstructions(processInstructions(input)).countFlipped();
+	return HexagonGrid.fromInstructions(input).countFlipped();
 }
 
 export function part2(input: string) {
-	let grid = HexagonGrid.fromInstructions(processInstructions(input));
+	let grid = HexagonGrid.fromInstructions(input);
 	for (let i = 0; i < 100; i++) {
 		const next = HexagonGrid.fromHexagonGrid(grid);
 		const [xMin, xMax, yMin, yMax, zMin, zMax] = grid.getExtremes();
-		for (let x = xMin - 1; x <= xMax + 1; x++) {
-			for (let y = yMin - 1; y <= yMax + 1; y++) {
+		for (let x = xMin - 1; x <= xMax + 1; x++)
+			for (let y = yMin - 1; y <= yMax + 1; y++)
 				for (let z = zMin - 1; z <= zMax + 1; z++) {
 					if (x + y + z !== 0) continue;
 					const flipped = grid.get(x, y, z);
@@ -16,31 +16,16 @@ export function part2(input: string) {
 					if (flipped && (!flippedNeighbors || flippedNeighbors > 2)) next.set(false, x, y, z);
 					if (!flipped && flippedNeighbors === 2) next.set(true, x, y, z);
 				}
-			}
-		}
 		grid = next;
 	}
 	return grid.countFlipped();
 }
 
-function processInstructions(input: string): Direction[][] {
-	return input
-		.split('\n')
-		.map((instruction) =>
-			(instruction.match(/(?:(?:n|s)(?:[e,w]){1}|e|w)/gi) || []).reduce(
-				(instruction, direction) => [...instruction, direction as Direction],
-				[] as Direction[],
-			),
-		);
-}
-
 class HexagonGrid {
 	private grid: { [key: number]: { [key: number]: { [key: number]: boolean } } } = {};
-
-	get = (x: number, y: number, z: number) =>
-		z in this.grid && y in this.grid[z] && x in this.grid[z][y] && this.grid[z][y][x];
-	flip = (x: number, y: number, z: number) => this.set(!this.get(x, y, z), x, y, z);
-	set = (value: boolean, x: number, y: number, z: number) => (((this.grid[z] ||= {})[y] ||= {})[x] = !!value);
+	get = (x = 0, y = 0, z = 0) => z in this.grid && y in this.grid[z] && x in this.grid[z][y] && this.grid[z][y][x];
+	flip = (x = 0, y = 0, z = 0) => this.set(!this.get(x, y, z), x, y, z);
+	set = (value: boolean, x = 0, y = 0, z = 0) => (((this.grid[z] ||= {})[y] ||= {})[x] = !!value);
 
 	countFlipped(): number {
 		return Object.values(this.grid)
@@ -51,14 +36,14 @@ class HexagonGrid {
 
 	countNeighbors(x: number, y: number, z: number): number {
 		const directionMap: { [key: string]: number[] } = {
-			[Direction.NE]: [-1, 0, 1],
-			[Direction.SE]: [0, 1, -1],
-			[Direction.E]: [-1, 1, 0],
-			[Direction.NW]: [0, -1, 1],
-			[Direction.SW]: [1, 0, -1],
-			[Direction.W]: [1, -1, 0],
+			ne: [-1, 0, 1],
+			se: [0, 1, -1],
+			e: [-1, 1, 0],
+			nw: [0, -1, 1],
+			sw: [1, 0, -1],
+			w: [1, -1, 0],
 		};
-		return Object.values(Direction).filter((direction) => {
+		return Object.keys(directionMap).filter((direction) => {
 			const [Δz, Δy, Δx] = directionMap[direction];
 			return this.get(x + Δx, y + Δy, z + Δz);
 		}).length;
@@ -73,19 +58,23 @@ class HexagonGrid {
 		return [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys), Math.min(...zs), Math.max(...zs)];
 	}
 
-	static fromInstructions(instructions: Direction[][]): HexagonGrid {
+	static fromInstructions(input: string): HexagonGrid {
 		let grid = new HexagonGrid();
-		for (let instruction of instructions) {
-			let position = { x: 0, y: 0, z: 0 };
-			for (let direction of instruction) {
-				if (direction === Direction.E || direction === Direction.SE) position.x++;
-				if (direction === Direction.W || direction === Direction.NW) position.x--;
-				if (direction === Direction.W || direction === Direction.SW) position.y++;
-				if (direction === Direction.E || direction === Direction.NE) position.y--;
-				if (direction === Direction.NE || direction === Direction.NW) position.z++;
-				if (direction === Direction.SW || direction === Direction.SE) position.z--;
+		for (let instr of input
+			.split('\n')
+			.map((instr) =>
+				(instr.match(/(?:(?:n|s)(?:[e,w]){1}|e|w)/gi) || []).reduce((instr, dir) => [...instr, dir], [] as string[]),
+			)) {
+			let pos = { x: 0, y: 0, z: 0 };
+			for (let dir of instr) {
+				if (dir === 'e' || dir === 'se') pos.x++;
+				if (dir === 'w' || dir === 'nw') pos.x--;
+				if (dir === 'w' || dir === 'sw') pos.y++;
+				if (dir === 'e' || dir === 'ne') pos.y--;
+				if (dir === 'ne' || dir === 'nw') pos.z++;
+				if (dir === 'sw' || dir === 'se') pos.z--;
 			}
-			grid.flip(position.x, position.y, position.z);
+			grid.flip(pos.x, pos.y, pos.z);
 		}
 		return grid;
 	}
@@ -95,13 +84,4 @@ class HexagonGrid {
 		newGrid.grid = JSON.parse(JSON.stringify(hexagonGrid.grid));
 		return newGrid;
 	}
-}
-
-enum Direction {
-	NE = 'ne',
-	SE = 'se',
-	E = 'e',
-	NW = 'nw',
-	SW = 'sw',
-	W = 'w',
 }
