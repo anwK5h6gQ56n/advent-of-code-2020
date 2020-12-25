@@ -69,10 +69,10 @@ class TileImage {
     '                  # \n' +
     '#    ##    ##    ###\n' + 
     ' #  #  #  #  #  #   ';
-		const monsterHashes = monster.split('').filter((x) => x === '#').length;
+		const monsterHashes = monster.split('#').length - 1;
 		const monsterCount: number[] = [];
 		const render = this.render();
-		const renderHashes = render.split('').filter((x) => x === '#').length;
+		const renderHashes = render.split('#').length - 1;
 		const regex = monster.split('\n').map((x) => new RegExp(`(?=(${x.replace(/\s/g, '.')}))`, 'g'));
 		for (const source of TileImage.possibleOrientationsGenerator(render.split('\n').map((x) => x.split('')))) {
 			const rows = source.map((chars) => chars.join(''));
