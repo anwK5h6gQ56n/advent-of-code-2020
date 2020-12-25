@@ -5,7 +5,7 @@ export function part1(input: string): number {
 
 export function part2(input: string) {
 	const image = new TileImage(input);
-	return image.countMonsters();
+	return image.calculateRoughness();
 }
 
 class Tile {
@@ -57,31 +57,38 @@ class TileImage {
 				})
 				.map((neighbor) => neighbor.id);
 		});
-		const index = this.tiles.findIndex((x) => x.id === this.edges[0]);
+		const index = this.tiles.findIndex((x) => x.id === this.edges[3]);
 		const tile = this.tiles[index];
 		this.tiles[index].gridPosition = { source: tile.source, x: 0, y: 0 };
 		this.positionNeighbors(index);
 	}
 
-	countMonsters() {
-		const monster = `                  #
-	  #    ##    ##    ###
-	   #  #  #  #  #  #   `;
+	calculateRoughness() {
+		//prettier-ignore
+		const monster = 
+    '                  # \n' +
+    '#    ##    ##    ###\n' + 
+    ' #  #  #  #  #  #   ';
+		const monsterHashes = monster.split('').filter((x) => x === '#').length;
+		const monsterCount: number[] = [];
+		const render = this.render();
+		const renderHashes = render.split('').filter((x) => x === '#').length;
 		const regex = monster.split('\n').map((x) => new RegExp(`(?=(${x.replace(/\s/g, '.')}))`, 'g'));
-		let count = 0;
-		for (const source of TileImage.possibleOrientationsGenerator(this.render())) {
+		for (const source of TileImage.possibleOrientationsGenerator(render.split('\n').map((x) => x.split('')))) {
 			const rows = source.map((chars) => chars.join(''));
+			let count = 0;
 			for (let y = 0; y < rows.length - 2; y++) {
 				const x = (xa: (number | undefined)[], xb: (number | undefined)[]) => xa.filter((xc) => new Set(xb).has(xc));
 				const handleRow = (i: number): (number | undefined)[] =>
 					[...rows[y + i].matchAll(regex[i])].map((x) => x.index);
 				count += x(x(handleRow(0), handleRow(1)), handleRow(2)).length;
 			}
+			monsterCount.push(count);
 		}
-		return count;
+		return renderHashes - monsterHashes * Math.max(...monsterCount);
 	}
 
-	private render(): string[][] {
+	private render(): string {
 		const grid = this.tiles.map((x) => x.gridPosition);
 		const xs = grid.map((x) => x?.x || 0);
 		const ys = grid.map((x) => x?.y || 0);
@@ -91,19 +98,17 @@ class TileImage {
 		for (let y = 0; y <= Math.max(...ys) - minY; y++) {
 			let imageRow: { [key: number]: string } = {};
 			for (let x = 0; x <= Math.max(...xs) - minX; x++) {
-				grid
-					.find((postition) => postition?.x === x + minX && postition.y === y + minY)
-					?.source.forEach((chars, index) => {
+				(grid.find((postition) => postition?.x === x + minX && postition.y === y + minY)?.source || [])
+					.slice(1, -1)
+					.map((row) => row.slice(1, -1))
+					.forEach((chars, index) => {
 						imageRow[index] ||= '';
 						imageRow[index] += chars.join('');
 					});
 			}
 			result.push(Object.values(imageRow).join('\n'));
 		}
-		return result
-			.join('\n')
-			.split('\n')
-			.map((x) => x.split(''));
+		return result.join('\n');
 	}
 
 	private positionNeighbors(index: number): void {
