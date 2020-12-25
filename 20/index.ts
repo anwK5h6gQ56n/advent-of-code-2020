@@ -1,12 +1,6 @@
-export function part1(input: string): number {
-	const edges = new TileImage(input).edges;
-	return edges.reduce((a, b) => a * b);
-}
+export const part1 = (input: string): number => new TileImage(input).edges.reduce((a, b) => a * b);
 
-export function part2(input: string) {
-	const image = new TileImage(input);
-	return image.calculateRoughness();
-}
+export const part2 = (input: string): number => new TileImage(input).calculateRoughness();
 
 class Tile {
 	readonly id: number;
