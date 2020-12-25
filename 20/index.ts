@@ -60,14 +60,14 @@ class TileImage {
 	calculateRoughness() {
 		//prettier-ignore
 		const monster = 
-    '                  # \n' +
-    '#    ##    ##    ###\n' + 
-    ' #  #  #  #  #  #   ';
+      '..................#.\n' +
+      '#....##....##....###\n' + 
+      '.#..#..#..#..#..#...';
 		const monsterHashes = monster.split('#').length - 1;
 		const monsterCount: number[] = [];
 		const render = this.render();
 		const renderHashes = render.split('#').length - 1;
-		const regex = monster.split('\n').map((x) => new RegExp(`(?=(${x.replace(/\s/g, '.')}))`, 'g'));
+		const regex = monster.split('\n').map((x) => new RegExp(`(?=(${x}))`, 'g'));
 		for (const source of TileImage.possibleOrientationsGenerator(render.split('\n').map((x) => x.split('')))) {
 			const rows = source.map((chars) => chars.join(''));
 			let count = 0;
